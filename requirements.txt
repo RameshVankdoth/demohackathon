@@ -8,4 +8,4 @@ pyodbc==4.0.35
 pymongo==4.4.1
 azure-storage-blob
 gunicorn==22.0.0
-dotenv
+python-dotenv
