@@ -62,7 +62,7 @@ def upload_code(file_stream, filename):
 smtp_port = int(os.environ.get("SMTP_PORT", 587))
 smtp_server = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
 email_from = os.environ.get("EMAIL_FROM")
-email_password = os.environ.get("EMAIL_PASSWORD")
+pswd = os.environ.get("EMAIL_PASSWORD")
 
 def allowed_file(filename):
     return '.' in filename and \
