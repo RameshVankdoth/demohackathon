@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hack4Hire</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/hint/show-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/hint/show-hint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/hint/python-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/lint/lint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/lint/lint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.6/addon/lint/python-lint.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .custom-card {
+            border-radius: 30px;
+        }
+        
+        .timer-box {
+            background-color: #fff;
+            color: #007bff;
+            padding: 10px 20px;
+            border-radius: 15px;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #007bff;
+        }
+        /* Apply gradient background to all heading tags */
+        /* Apply rainbow gradient background to all heading tags */
+        
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Poppins', sans-serif;
+            background-image: linear-gradient(to right, violet, rgb(135, 53, 194), rgb(125, 125, 215), rgb(124, 208, 124), yellow, orange, red);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .modal-title {
+            color: black;
+        }
+        /* Apply blue color to table header */
+        /* Apply blue color to th tags */
+        
+        .table thead th {
+            background-color: #007bff;
+            color: white;
+            /* Blue color */
+        }
+        
+        .h5 {
+            font-size: 2rem;
+        }
+        
+        .navbar-custom {
+            background-color: #2f2e2e;
+            /* Black color */
+            color: white;
+        }
+        
+        .navbar-custom .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .navbar-custom .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .completion-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #0f0f0f;
+            padding: 20px;
+            border: 1px solid #0a0a0a;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background-color: #ddd;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            background-color: blue;
+            color: white;
+        }
+    </style>
+
+<style>
+    .completion-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #090909;
+        padding: 20px;
+        border: 1px solid #060606;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    #freezeScreen {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                text-align: center;
+                color: rgb(250, 246, 246);
+                font-size: 24px;
+                padding-top: 20%;
+            }
+            
+            #warningBox,
+            #confirmationBox {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: rgb(28, 24, 24);
+                color: rgb(253, 242, 242);
+                padding: 20px;
+                border: 2px solid black;
+                z-index: 2000;
+            }
+            
+            #warningBox button,
+            #confirmationBox button {
+                margin-top: 10px;
+            }
+            #thank-you-popup {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            text-align: center;
+        }
+
+</style>
+
+
+</head>
+
+<body class="bg-dark text-white">
+
+    <header class="navbar-custom text-white py-3 animate__animated animate__fadeInDownBig">
+        <div class="container d-flex justify-content-between align-items-center">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="me-2" style="height: 40px;">
+            <h1 class="h5 mb-0">ARTISET</h1>
+            <div id="timer-box" class="mt-auto">
+                <div id="timer" class="timer-box">Ends in: <span id="countdown">60</span> seconds</div>
+            </div>
+        </div>
+    </header>
+    <br><br>
+    <div class="container">
+        <div id="freezeScreen">You have been penalized for switching tabs. Please wait...</div>
+        <div id="warningBox">
+            <p id="warningMessage"></p>
+            <button onclick="hideWarningBox()">OK</button>
+        </div>
+        <div id="confirmationBox">
+            <p>You have exceeded the allowed number of warnings. Your test will now be submitted.</p>
+            <button onclick="submitAndRedirect()">OK</button>
+        </div>
+    </div>
+    <div class="container animate__animated animate__backInUp">
+        <div class="row">
+            <br><br>
+            <div class="col-md-6 animate__animated animate__fadeIn">
+                <div class="mt-1">
+                    <div id="problem-statements">
+                        {% if problem %}
+                        <div class="card mb-3 bg-dark text-white custom-card">
+                            <div class="card-body bg-secondary custom-card">
+                                <h5 class="card-title">Problem Statement:</h5>
+                                <p class="card-text">{{ problem.problem_statement }}</p>
+                            </div>
+                        </div>
+                        <div class="card mb-3 bg-dark text-white custom-card">
+                            <div class="card-body bg-secondary custom-card">
+                                <h5 class="card-title">Constraints:</h5>
+                                <p class="card-text">{{ problem.description }}</p>
+                            </div>
+                        </div>
+                        <div class="card mb-3 bg-dark text-white custom-card">
+                            <div class="card-body bg-secondary custom-card">
+                                <h5 class="card-title">Explanation:</h5>
+                                <p class="card-text">{{ problem.explanation }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 animate__animated animate__delay-4s">
+                <div class="mt-5">
+                    {% if problem %}
+                    <h3>Sample Input and Output</h3>
+                    <table class="table table-bordered text-white">
+                        <thead>
+                            <tr>
+                                <th>Sample Input</th>
+                                <th>Sample Output</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test_case in problem.test_cases[:2] %}
+                            <tr>
+                                <td>{{ test_case.input }}</td>
+                                <td>{{ test_case.output }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="container">
+                    <p>{{ problem.test_cases }}</p>
+                </div>
+                <div class="mt-5">
+                    <h3>Write Your Code</h3>
+                    <form id="code-form">
+                        <div class="mb-3">
+                            <label for="language" class="form-label">Select Language</label>
+                            <select class="form-select" id="language">
+                  <option value="python">Python</option>
+                  <option value="java">Java</option>
+                </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="theme" class="form-label">Select Theme</label>
+                            <select class="form-select" id="theme">
+                  <option value="default">Default</option>
+                  <option value="dracula">Dracula</option>
+                  <option value="eclipse">Eclipse</option>
+                </select>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="overlay" id="start-overlay">
+        <div class="col-md-4">
+            <div class="container bg-dark text-left border-black">
+                <h1 class="text-center bg-danger">Warning</h1>
+                    <p class="text-center">The test will start as soon as you click on start button.</p>
+                <ol type="1">
+                    <li>Please do not close, change, minimize the tab it will throw a warning.</li>
+                    <li>You will get enough time to solve the problem just be patient and solve.</li>
+                    <li>After 3 warning test will be autosubmitted and you will be redirected to homepage.</li>
+                    <li>After clicking submit button you will be able to see all test cases.</li>
+                    <li>Clicking on submit will final submit the code.</li>
+                </ol>
+                <div class="row text-center">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+                        <button id="start-test-button" class="button">Start Test</button>   
+                    </div>
+                    <div class="col-md-4">
+                        
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    <div class="container animate__animated animate__backInLeft">
+        <div class="mt-5">
+            <form id="code-form">
+                <div class="mb-3">
+                    <textarea id="code-editor" class="form-control" rows="15" disabled></textarea>
+                </div>
+                <button type="button" id="run-button" class="btn btn-primary">Run</button>
+                <button type="button" id="submit-button" class="btn btn-success">Submit</button>
+            </form>
+        </div>
+        <div class="mt-5">
+            <h3>Output</h3>
+            <div id="output" class="border p-3 bg-white rounded text-dark custom-card">The output will appear here:</div>
+        </div>
+        <div class="mt-5">
+            <h3>Test Cases</h3>
+            <div id="test-cases" class="border p-3 bg-white rounded text-dark custom-card">The test cases will appear here:</div>
+            <div id="score" class="mt-3"></div>
+        </div>
+    </div>
+
+    <div id="thank-you-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); z-index: 1000;">
+        <p>Thank you!</p>
+    </div>
+
+    <footer class="mt-5 bg-dark text-white py-3">
+        <div class="container text-center">
+            <p>&copy; 2023 Artiset Solutions Pvt. Ltd.</p>
+        </div>
+    </footer>
+    <!-- Modal Structure -->
+    <div class="modal fade" id="exitModal" tabindex="-1" aria-labelledby="exitModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exitModalLabel">Exit Page</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to exit the page?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirm-exit">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Initialize CodeMirror
+    const codeEditor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+        lineNumbers: true,
+        mode: 'python',
+        theme: 'default',
+        autoCloseBrackets: true,
+        matchBrackets: true,
+        styleActiveLine: true,
+        extraKeys: {
+            "Ctrl-Space": "autocomplete"
+        }
+    });
+
+    const languageSelector = document.getElementById('language');
+    const themeSelector = document.getElementById('theme');
+    const outputElement = document.getElementById('output');
+    const testCasesElement = document.getElementById('test-cases');
+    const scoreElement = document.getElementById('score');
+    let warningCount = 0;
+    const maxWarnings = 3;
+    
+    document.getElementById('start-test-button').addEventListener('click', function() {
+    enableFullScreen(); // Ensure this function exists and works correctly
+    document.getElementById('start-overlay').style.display = 'none'; // Hide the overlay
+    startCountdown(); // Start the countdown
+    });
+
+    // Function to calculate the initial time difference in seconds
+    function calculateInitialTime() {
+    // Set the future time in IST (UTC+5:30)
+    const futureTimeString = '2024-08-02T18:00:00.000+05:30';
+    const futureTime = new Date(futureTimeString);
+    console.log('Future Time:', futureTime);
+    
+    const currentTime = new Date();
+    console.log('Current Time:', currentTime);
+
+    // Calculate the time difference in milliseconds
+    const timeDifferenceMillis = futureTime - currentTime;
+
+    if (timeDifferenceMillis <= 0) {
+        window.location.href='/login';
+        return 0; // If the future time has already passed, return 0
+    }
+
+    // Convert milliseconds to seconds
+    const timeDifferenceSeconds = Math.floor(timeDifferenceMillis / 1000);
+    console.log(`Time difference in seconds: ${timeDifferenceSeconds}`);
+    return timeDifferenceSeconds; // Return time in seconds
+    }
+
+    let initialTime = calculateInitialTime(); // Initialize time from calculation
+    let countdown = initialTime;
+    let isTestActive = true; // Flag to track if the test is active
+    let countdownInterval;
+
+    // Function to update the countdown
+    function updateCountdown() {
+        if (!isTestActive) return; // Exit if the test is not active
+
+        countdown--; // Decrease countdown by one second
+        if (countdown < 0) {
+            countdown = 0; // Ensure countdown does not go negative
+        }
+        document.getElementById('countdown').textContent = formatTime(countdown); // Update display in MM:SS format
+
+        if (countdown <= 0) {
+            endTest('Your session has timed out.'); // End the test if countdown reaches zero
+        }
+    }
+
+    // Function to format time as MM:SS
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    // Function to end the test session
+    function endTest(message) {
+        if (!isTestActive) return; // Exit if the test is already inactive
+
+        isTestActive = false; // Mark the test as inactive
+        clearInterval(countdownInterval); // Clear the countdown interval
+        showCompletionMessage(message); // Display a completion message
+        redirectToDashboard(); // Redirect to the dashboard
+    }
+
+    // Function to start the countdown interval
+    function startCountdown() {
+        // Ensure only one interval is set
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+        countdownInterval = setInterval(updateCountdown, 1000); // Update every second
+    }
+
+    // Initialize countdown interval
+    startCountdown();
+
+
+
+
+    // Function to show completion message
+    function showCompletionMessage(message) {
+        const completionMessageElement = document.createElement('div');
+        completionMessageElement.classList.add('completion-message');
+        completionMessageElement.textContent = message;
+        document.body.appendChild(completionMessageElement);
+
+        setTimeout(function() {
+            document.body.removeChild(completionMessageElement);
+        }, 10000); // 10 seconds
+    }
+
+    // Function to redirect to dashboard
+    function redirectToDashboard() {
+        window.location.href = '/login'; // Or any other URL
+    }
+
+    // Event listener for language selector
+    languageSelector.addEventListener('change', function() {
+        const language = languageSelector.value;
+        codeEditor.setOption('mode', language === 'python' ? 'python' : 'text/x-java');
+    });
+
+    // Event listener for theme selector
+    themeSelector.addEventListener('change', function() {
+        codeEditor.setOption('theme', themeSelector.value);
+    });
+
+    // Event listener for Run button
+    document.getElementById('run-button').addEventListener('click', function() {
+        const userCode = codeEditor.getValue();
+        const language = languageSelector.value;
+
+        fetch('/execute_code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code: userCode, language: language })
+        })
+        .then(response => response.json())
+        .then(data => {
+            outputElement.innerHTML = data.output ? `<pre><h1>${data.output}</h1></pre>` : `<pre style="color: red;">${data.error}</pre>`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            outputElement.innerHTML = '<pre style="color: red;">Error executing code. Please try again.</pre>';
+        });
+    });
+
+    // Event listener for Submit button
+    document.getElementById('submit-button').addEventListener('click', function() {
+        countdown = 3; // Reset countdown on submit
+        fetch('/check_code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code: codeEditor.getValue(), language: languageSelector.value })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.results) {
+                let testCaseResults = '';
+                data.results.forEach((result, index) => {
+                    testCaseResults += `<div>Test Case ${index + 1}: ${result}</div>`;
+                });
+                testCasesElement.innerHTML = testCaseResults;
+            }
+            if (data.score) {
+            scoreElement.innerHTML = `Score: ${data.score}`;
+            }
+
+            // Check if a redirect URL is provided
+            if (data.redirect) {
+                // Redirect after 3 seconds
+                setTimeout(function() {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                }, 5000); // 3000 milliseconds = 3 seconds
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
+        });
+    });      
+});
+
+    </script>
+
+<script>
+    let warningCount = 0;
+    const maxWarnings = 3;
+    let initialTime = 600; // Example initial test time in seconds
+
+    function showWarning(message) {
+        const warningBox = document.getElementById('warningBox');
+        const warningMessage = document.getElementById('warningMessage');
+        warningMessage.innerText = message;
+        warningBox.style.display = 'block';
+    }
+
+    function hideWarningBox() {
+        document.getElementById('warningBox').style.display = 'none';
+        if (warningCount <= maxWarnings) {
+            enableFullScreen();
+        }
+    }
+
+    function showConfirmationBox() {
+        const confirmationBox = document.getElementById('confirmationBox');
+        confirmationBox.style.display = 'block';
+    }
+
+    function submitAndRedirect() {
+        alert("You have exceeded the allowed number of warnings. Your test will now be submitted.");
+        // Redirect to another page or URL
+        setTimeout(function() {
+            alert("Thank you!");
+            window.location.href = '/home'; 
+        }, 5000);
+    }
+
+    function freezeScreen(duration) {
+        const freezeScreenElement = document.getElementById('freezeScreen');
+        freezeScreenElement.style.display = 'block';
+        setTimeout(() => {
+            freezeScreenElement.style.display = 'none';
+            enableFullScreen();
+        }, duration);
+    }
+
+    function handleVisibilityChange() {
+        if (document.hidden || document.visibilityState === 'hidden' || !document.fullscreenElement) {
+            warningCount++;
+            if (warningCount === 1) {
+                showWarning("You have switched tabs or minimized the window. Please focus on the test. You have two warnings remaining.");
+                freezeScreen(15000);
+                initialTime -= 15;
+            } else if (warningCount === 2) {
+                showWarning("You have switched tabs or minimized the window again. This is your second warning. Please stay on the test page. You have one warning remaining.");
+                freezeScreen(15000);
+                initialTime -= 15;
+            } else if (warningCount === 3) {
+                showWarning("This is your final warning. You have switched tabs or minimized the window multiple times. If you do this again, you will be prompted to leave the test.");
+                freezeScreen(15000);
+                initialTime -= 15;
+            } else {
+                showConfirmationBox();
+            }
+        }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('fullscreenchange', handleVisibilityChange);
+
+    function enableFullScreen() {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+            document.documentElement.msRequestFullscreen();
+        }
+    }
+    function disableFullScreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { // Firefox
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE/Edge
+        document.msExitFullscreen();
+    }
+}
+
+
+
+    window.onload = enableFullScreen;
+</script>
+    
+</body>
+
+</html>

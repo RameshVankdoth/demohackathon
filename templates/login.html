@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Your Way to a Career: Join the Hackathon!</title>
+    <meta name="description" content="It is ARTISET hackathon">
+    <meta name="google-site-verification" content="ntUFSe18AqnePAZFrbNZ5cSVRyXndF_cBrPCwZgZ4CY" />
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/flexslider.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/venobox.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/fonts.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landingpage.css') }}">
+    <style>
+        body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: scroll;
+    background: url('{{ url_for('static', filename='img/bg.jpeg') }}') no-repeat center center fixed;
+    background-size: cover;
+}
+
+body::before {
+    content: "";
+    position: fixed; /* Changed from absolute to fixed */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent overlay */
+    z-index: -1; /* Ensure the background stays behind the content */
+}
+
+.footer{
+    width: 100%;
+}
+</style>
+</head>
+<body>
+    <section class="header">
+        <header class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2 text-left">
+                        <a class="scroll logo" href="#wrapper">
+                            <img class="logo-default" src="{{ url_for('static', filename='img/logo.png') }}" height="100" width="35" alt="logo" />
+                        </a>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-6">
+                        <div class="topnav text-right" id="myTopnav">
+                            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                            <ul class="nav-justified">
+                                <li><a class="scroll" href="{{ url_for('home') }}">Home</a></li>
+                                <li><a class="scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules</a></li>
+                                <li><a class="scroll" href="{{ url_for('login') }}">Login</a></li>
+                                <li><a class="scroll" href="{{ url_for('register') }}">Register</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+
+    <section>
+        <div class="container hero-content">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <br><br>
+                    <img class="logo-default" src="{{ url_for('static', filename='img/logof.png') }}" alt="logo" /><br>
+                    <div class="mt-5 mb-4 text-center">
+                        <p class="gradient-text" style="font-size: 25px; margin-bottom: 10px;">LOGIN</p>
+
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert alert-warning" role="alert">
+                            {{ messages[0] }}
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        <form action="{{ url_for('loginpage')}}" method="post">
+                            <div class="form-group">
+                                <label for="email">Email:</label><input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password" required><span class="toggle-password" onclick="togglePassword()"><i class="fas fa-eye"></i></span>
+                                <div class="pass-check" id="pass-check"></div>
+                            </div>
+                            <a href="{{ url_for('resetpass')}}" class="forgot-password">Forgot Password?</a>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="{{ url_for('register')}}" class="btn btn-primary btn-block">Don't have an account? Sign Up</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </section>
+    <br><br>
+    <section class="footer relative">
+        <div class="wrapper">
+            <footer class="pt-20 bg-dark">
+                <div class="bg-black pt-50 pb-50">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <p class="gradient-text">&copy; Made with 🖤 ARTISET Team</p>
+                                <a class="gradient-text scroll" href="mailto:admin@artiset.in">Contact us</a>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <ul class="block-legal">
+                                    <li><span><a class="gradient-text scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules & Code of Conduct</a></span></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <ul class="block-legal">
+                                    <li><span><a class="gradient-text scroll" href="#wrapper">Back To Top</a></span></li>
+                                    <li><span><a class="gradient-text scroll">Version 1.2.0</a></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/jquery-1.12.4.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/jquery.flexslider-min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/jquery.countdown.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/jquery.validate.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/placeholders.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/venobox.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-136937845-1"></script>
+    <script>
+        function togglePassword() {
+            var passwordInput = document.getElementById('password');
+            var toggleIcon = document.querySelector('.toggle-password i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myTopnav");
+            var overlay = document.getElementById("overlay");
+            
+            if (x.className === "topnav") {
+                x.className += " responsive";
+                overlay.style.display = "block"; // Show the overlay
+            } else {
+                x.className = "topnav";
+                overlay.style.display = "none"; // Hide the overlay
+            }
+        }
+        
+        // Close the menu and overlay when clicking on the overlay
+        document.getElementById("overlay").addEventListener("click", function() {
+            var x = document.getElementById("myTopnav");
+            x.className = "topnav";
+            this.style.display = "none"; // Hide the overlay
+        });
+        </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

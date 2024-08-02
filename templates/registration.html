@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Your Way to a Career: Join the Hackathon!</title>
+    <meta name="description" content="It is ARTISET hackathon">
+    <meta name="google-site-verification" content="ntUFSe18AqnePAZFrbNZ5cSVRyXndF_cBrPCwZgZ4CY" />
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/flexslider.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/venobox.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/fonts.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landingpage.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/register.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='js/register.js')}}">
+    <style>
+        .toggle-password {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .form-control {
+            padding-right: 30px; /* space for the icon */
+        }
+        body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: scroll;
+            background: url('{{ url_for('static', filename='img/bg.jpeg') }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        body::before {
+            content: "";
+            position: fixed; /* Changed from absolute to fixed */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); /* Semi-transparent overlay */
+            z-index: -1; /* Ensure the background stays behind the content */
+        }
+    
+        .footer{
+            width: 100%;
+        }
+</style>
+</head>
+<body>
+    <section class="header">
+        <header class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2 text-left">
+                        <a class="scroll logo" href="#wrapper">
+                            <img class="logo-default" src="{{ url_for('static', filename='img/logo.png') }}" height="100" width="35" alt="logo" />
+                        </a>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-6">
+                        <div class="topnav text-right" id="myTopnav">
+                            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                            <ul class="nav-justified">
+                                <li><a class="scroll" href="{{ url_for('home') }}">Home</a></li>
+                                <li><a class="scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules</a></li>
+                                <li><a class="scroll" href="{{ url_for('login') }}">Login</a></li>
+                                <li><a class="scroll" href="{{ url_for('register') }}">Register</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+
+    <section>
+        <div class="container hero-content">
+            <div class="row">
+            <br><br>
+                <div class="mt-5 mb-4 text-center">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div class="alert alert-warning" role="alert">
+                        {{ messages[0] }}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <!-- For form -->
+        <form action="register" method="post" enctype="multipart/form-data">
+            <!-- Container 1-->
+            <div class="container form-container">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        <div class="alert alert-dismissible fade show" role="alert">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}" style="color: white;">{{ message }}</div>
+                            {% endfor %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <form id="registrationForm" enctype="multipart/form-data" method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Fullname" class="form-label">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="Fullname" name="Fullname" placeholder="Enter your full name" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3 position-relative">
+                            <label for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="Password" name="Password" placeholder="Enter Password" required />
+                            <span class="toggle-password" onclick="togglePassword('Password')"><br>
+                                <i class="fas fa-eye" style="color: #ffffff; font-size: 12px; margin-right: 2vh;"></i>
+                            </span>
+                        </div>
+                        <div class="col-md-6 mb-3 position-relative">
+                            <label for="Conpass" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="Conpass" name="Conpass" placeholder="Confirm Password" required />
+                            <span class="toggle-password" onclick="togglePassword('Conpass')"><br>
+                                <i class="fas fa-eye" style="color: #ffffff; font-size: 12px;  margin-right: 2vh;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div id="pass-check" class="text-danger mb-3"></div>
+        
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="mobile" class="form-label">Mobile <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="mobile" name="mobile" pattern="\+91\d{10}" placeholder="+91XXXXXXXXXX" required />
+                        </div>
+        
+                        <div class="col-md-4 mb-3">
+                            <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
+                            <select class="form-control" id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+        
+                        <div class="col-md-4 mb-3">
+                            <label for="dob" class="form-label">DOB <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="dob" name="dob" required />
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="level" class="form-label">Education Level <span class="text-danger">*</span></label>
+                            <select class="form-control" id="level" name="level" required><!-- matching "level" or it should be "education level" -->
+                                <option value="">Select Education Level</option>
+                                {% for level in levels %}
+                                <option value="{{ level.LevelName }}">{{ level.LevelName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="college" class="form-label">College <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="college" name="college" required />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="marks" class="form-label">Avg Marks (CGPA) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="marks" name="marks" step="0.01" required />
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Course" class="form-label">Course <span class="text-danger">*</span></label>
+                            <select class="form-control" id="Course" name="Course" required>
+                                <option value="">Select Course</option>
+                                {% for course in courses %}
+                                <option value="{{ course.CourseName }}">{{ course.CourseName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="Specialization" class="form-label">Specialization <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="Specialization" name="Specialization" required />
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="positionApplying" class="form-label">Position Applying<span class="text-danger">*</span></label>
+                            <select class="form-control" id="positionApplying" name="positionApplying" required>
+                                <option value="">Select Position</option>
+                                {% for pos in positions %}
+                                <option value="{{ pos.name }}">{{ pos.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="primarySkill" class="form-label">Primary Skill <span class="text-danger">*</span></label>
+                            <select class="form-control" id="primarySkill" name="primarySkill" required>
+                                <option value="">Select Skill</option>
+                                {% for skill in skills %}
+                                <option value="{{ skill }}">{{ skill }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="secondarySkill" class="form-label">Secondary Skill <span class="text-danger">*</span></label>
+                            <select class="form-control" id="secondarySkill" name="secondarySkill" required>
+                                <option value="">Select Skill</option>
+                                {% for skill in skills %}
+                                <option value="{{ skill }}">{{ skill }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="altphone" class="form-label">Altername Phone: <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="altphone" name="altphone" pattern="\+91\d{10}" placeholder="+91XXXXXXXXXX" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="altemail" class="form-label">Alternate Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="altemail" name="altemail" placeholder="Enter Alternate Email" required />
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="homeState" class="form-label">Home State <span class="text-danger">*</span></label>
+                                <select class="form-control" id="homeState" name="homeState" required>
+                                    <option value="">Select State</option>
+                                    {% for state in states %}
+                                    <option value="{{ state.id }}">{{ state.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="homeCity" class="form-label">Home City <span class="text-danger">*</span></label>
+                                <select class="form-control" id="homeCity" name="homeCity" required>
+                                    <option value="">Select City</option>
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="currState" class="form-label">Current State <span class="text-danger">*</span></label>
+                                <select class="form-control" id="currState" name="currState" required>
+                                    <option value="">Select State</option>
+                                    {% for state in states %}
+                                    <option value="{{ state.id }}">{{ state.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="currCity" class="form-label">Current City <span class="text-danger">*</span></label>
+                                <select class="form-control" id="currCity" name="currCity" required>
+                                    <option value="">Select City</option>
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="prefCity" class="form-label"> Preferred location <span class="text-danger">*</span></label>
+                                <select class="form-control" id="prefCity" name="prefCity" required>
+                                    <option value="">Select City</option>
+                                    {% set specific_cities = ['Pune', 'Mumbai', 'Bengaluru'] %}
+                                    {% for city in cities if city.name in specific_cities %}
+                                    <option value="{{ city.name }}">{{ city.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="resume" class="form-label">Resume <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control-file" id="resume" name="resume" accept=".pdf,.doc,.docx" required />
+                        </div>
+                    </div>
+        
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="terms" required /><br>
+                            <label class="form-label"> I have checked all the information. <span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+            <!-- Container 11-->
+            
+            <div class="container justify-content-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="/login" class="btn btn-primary ml-2">Have an account? Login</a>
+                <br><br>
+            </div>
+         </form>
+        
+        </section>
+        <section class="footer relative">
+            <div class="wrapper">
+                <footer class="pt-20 bg-dark">
+                    <div class="bg-black pt-50 pb-50">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4 text-center">
+                                    <p class="gradient-text">&copy; Made with 🖤 ARTISET Team</p>
+                                    <a class="gradient-text scroll" href="mailto:admin@artiset.in">Contact us</a>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <ul class="block-legal">
+                                        <li><span><a class="gradient-text scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules & Code of Conduct</a></span></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <ul class="block-legal">
+                                        <li><span><a class="gradient-text scroll" href="#wrapper">Back To Top</a></span></li><br>
+                                        <li><span><a class="gradient-text scroll">Version 1.2.0</a></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </section>
+    <script>
+        // Convert Jinja2 cities and states arrays to JavaScript arrays
+        var cities = {{ cities|tojson|safe }};
+        var states = {{ states|tojson|safe }};
+    
+        function updateCityDropdown(stateSelectId, citySelectId) {
+            var stateId = document.getElementById(stateSelectId).value;
+            var citySelect = document.getElementById(citySelectId);
+            
+            // Clear previous options
+            citySelect.innerHTML = '<option value="">Select City</option>';
+    
+            // Filter and add new options
+            cities.forEach(function(city) {
+                if (city.state_id == stateId) {
+                    var option = document.createElement('option');
+                    option.value = city.id;
+                    option.textContent = city.name;
+                    citySelect.appendChild(option);
+                }
+            });
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle the home state and city dropdown
+            var homeStateSelect = document.getElementById('homeState');
+            homeStateSelect.addEventListener('change', function() {
+                updateCityDropdown('homeState', 'homeCity');
+            });
+            // Trigger the update function on page load if a state is pre-selected
+            updateCityDropdown('homeState', 'homeCity');
+    
+            // Handle the current state and city dropdown
+            var currStateSelect = document.getElementById('currState');
+            currStateSelect.addEventListener('change', function() {
+                updateCityDropdown('currState', 'currCity');
+            });
+            // Trigger the update function on page load if a state is pre-selected
+            updateCityDropdown('currState', 'currCity');
+        });
+    </script>
+    
+        <!-- Custom JS -->
+        <script>
+            $(document).ready(function() {
+                function updateCityDropdown(stateSelector, citySelector) {
+                    var stateId = stateSelector.val();
+                    if (!stateId) {
+                        citySelector.html('<option value="" disabled selected>Select City</option>');
+                        return;
+                    }
+                    $.getJSON("{{ url_for('get_cities') }}", { state_id: stateId }, function(data) {
+                        citySelector.html('<option value="" disabled selected>Select City</option>');
+                        $.each(data.cities, function(index, city) {
+                            citySelector.append($('<option>', {
+                                value: city.id,
+                                text: city.name
+                            }));
+                        });
+                    });
+                }
+    
+                $('#homeState').change(function() {
+                    updateCityDropdown($(this), $('#homeCity'));
+                });
+    
+                $('#currState').change(function() {
+                    updateCityDropdown($(this), $('#currCity'));
+                });
+            });
+        </script>
+
+    <!-- Vijay changes-->
+    <script>
+        function validatePassword() {
+            var password = document.getElementById('Password').value;
+            var confirmPassword = document.getElementById('Conpass').value;
+            var validationMessage = "";
+            var isValid = true;
+    
+            // Check the length of the password
+            if (password.length < 8) {
+                validationMessage += "Password must be at least 8 characters long<br>";
+                isValid = false;
+            } else if (password.length > 12) {
+                validationMessage += "Password must not exceed 12 characters<br>";
+                isValid = false;
+            }
+    
+            // Check for uppercase letter
+            if (!/[A-Z]/.test(password)) {
+                validationMessage += "Password must contain at least one uppercase letter<br>";
+                isValid = false;
+            }
+    
+            // Check for lowercase letter
+            if (!/[a-z]/.test(password)) {
+                validationMessage += "Password must contain at least one lowercase letter<br>";
+                isValid = false;
+            }
+    
+            // Check for digit
+            if (!/\d/.test(password)) {
+                validationMessage += "Password must contain at least one digit<br>";
+                isValid = false;
+            }
+    
+            // Check for special character
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                validationMessage += "Password must contain at least one special character<br>";
+                isValid = false;
+            }
+    
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                validationMessage += "Passwords do not match<br>";
+                isValid = false;
+            }
+    
+            // Display validation message
+            var passCheck = document.getElementById('pass-check');
+            passCheck.innerHTML = validationMessage;
+    
+            // Return false to prevent form submission if invalid
+            return isValid;
+        }
+    
+        function togglePassword(id) {
+            var input = document.getElementById(id);
+            var toggleIcon = document.querySelector(`#${id} ~ .toggle-password i`);
+    
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+        
+        // Attach event listeners to validate password on input
+        document.getElementById('Password').addEventListener('input', validatePassword);
+        document.getElementById('Conpass').addEventListener('input', validatePassword);
+    </script>
+</body>
+</html>

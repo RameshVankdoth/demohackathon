@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Your Way to a Career: Join the Hackathon!</title>
+    <meta name="description" content="It is ARTISET hackathon">
+    <meta name="google-site-verification" content="ntUFSe18AqnePAZFrbNZ5cSVRyXndF_cBrPCwZgZ4CY" />
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/flexslider.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/venobox.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{ url_for('static', filename='css/fonts.css') }}" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landingpage.css') }}">
+    <style>
+        body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: scroll;
+    background: url('{{ url_for('static', filename='img/bg.jpeg') }}') no-repeat center center fixed;
+    background-size: cover;
+}
+
+body::before {
+    content: "";
+    position: fixed; /* Changed from absolute to fixed */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent overlay */
+    z-index: -1; /* Ensure the background stays behind the content */
+}
+
+    </style>
+</head>
+<body>
+    <section class="header">
+        <header class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2 text-left">
+                        <a class="scroll logo" href="#wrapper">
+                            <img class="logo-default" src="{{ url_for('static', filename='img/logo.png') }}" height="100" width="35" alt="logo" />
+                        </a>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-6">
+                        <div class="topnav text-right" id="myTopnav">
+                            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                            <ul class="nav-justified">
+                                <li><a class="scroll" href="{{ url_for('home') }}">Home</a></li>
+                                <li><a class="scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules</a></li>
+                                <li><a class="scroll" href="{{ url_for('login') }}">Login</a></li>
+                                <li><a class="scroll" href="{{ url_for('register') }}">Register</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+
+            <section>
+                <div class="row text-center">
+                    <img class="logo-default" src="{{ url_for('static', filename='img/logof.png') }}" alt="logo" height="100px" width="50%"/>
+                    <br>
+                    <div class="row text-center"><a href="/register" class="but scroll">Register Now</a></div>
+                </div>
+                <div class="col">
+                    <section id="about" class="about pt-60">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-8 col-sm-offset-2 mb-50 text-center">
+                                    <h1 class="title">About HACK4HIRE</h1>
+                                    <h2 class="title-lead mt-10" style="color: white;">
+                                        Welcome to HACK4HIRE, where innovation meets opportunity! Our hackathon is designed to bring together talented students from diverse backgrounds to collaborate on real-world challenges. Over the course of duration, participants will work in teams to develop
+                                        innovative solutions, network with industry professionals, and gain exposure to potential employers.
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section class="sec">
+                <div class="testcard">
+                    <div class="cards">
+                        {% for con in contests %}
+                        <div class="card">
+                            <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/51a861546e7f0d502f8a101f7a711b43632b3b563b9e77e0c81bacfd09e2200d?apiKey=a9b3cead4ca84583b1f944d0daf1ae07&&apiKey=a9b3cead4ca84583b1f944d0daf1ae07" class="contest-icon" alt="Contest icon" />
+                            <h4>{{ con['Contest'] }}</h4><br>
+                            <p class="Skill">Skill:{{ con['Skill'] }}</p>
+                            <p class="Duration">Duration:{{ con['Duration'] }}</p>
+                            
+                            <p class="description">
+                                <span class="truncated">{{ con['Description'][:100] }}...</span>
+                                <span class="full">{{ con['Description'] }}</span>
+                            </p>
+                            <button class="show-more-btn">Show More</button>
+                            
+                            <p>Start Date and Time: {{ con['Start_Date_and_Time'] }}</p>
+                            
+                            <button class="action-button"><a href="{{ url_for('register')}}">Register</a></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            
+            
+            
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const showMoreBtns = document.querySelectorAll('.show-more-btn');
+                showMoreBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const description = this.previousElementSibling;
+                        const truncated = description.querySelector('.truncated');
+                        const full = description.querySelector('.full');
+                        if (truncated.style.display === 'none') {
+                            truncated.style.display = '-webkit-box';
+                            full.style.display = 'none';
+                            this.textContent = 'Show More';
+                        } else {
+                            truncated.style.display = 'none';
+                            full.style.display = 'block';
+                            this.textContent = 'Show Less';
+                        }
+                    });
+                });
+            });
+            </script>
+            
+
+            <!--<section class="sec">
+                <div class="testcard">
+                    <div class="cards">
+                    {% for contest in contests %}
+                    <div class="card">
+                        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/51a861546e7f0d502f8a101f7a711b43632b3b563b9e77e0c81bacfd09e2200d?apiKey=a9b3cead4ca84583b1f944d0daf1ae07&&apiKey=a9b3cead4ca84583b1f944d0daf1ae07" class="contest-icon" alt="Contest icon" />
+                        <h4>{{ contest['Contest'] }}</h4>
+                        <p class="Skill">Skill:{{ contest ['Skill'] }}</p>
+                        
+                        <p class="Duration">Duration:{{ contest ['Duration'] }}</p>
+                        
+                        <p>{{ contest['Description'] }}</p>
+                        <button class="show-more-btn">Show More</button>
+                        
+                        <p>Start Dat and Time: {{ contest['Start_Date_and_Time'] }}</p>
+                        
+                        <button class="action-button">Register</button>
+                        
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                </div>
+        
+                
+            </section>-->
+
+            <!--<section id="faq" class="faq pb-120">
+                <div class="container">
+                    <div class="row">
+                        <div class="wrapper">
+                            <i id="left" class="fa-solid fas fa-angle-left"></i>
+                            <p class="text-[20px] font-medium text-lc-text-secondary dark:text-dark-lc-text-secondary">Upcoming Contest</p>
+                            <br>
+                            <div class="container">
+                            <ul class="carousel"> 
+                                {% set specific_contest = ['Python-data science intern'] %}
+                                {% for con in contests if con.Contest in specific_contest %}
+                                <li class="card">
+                                    <img class="img" src="{{ url_for('static', filename='img/contest1.png') }}" alt="" draggable="false" />
+                                    <h2 style="color: rgb(74, 95, 231); font-weight:bold;"><a href="{{url_for('loginpage')}}">{{ con['Contest'] }}</a></h2>
+                                    <h3 style="color: white;">Description: {{con['Description']}}</h3>
+                                    <h3 style="color: white;">Date and: {{ con['Start_Date_and_Time'] }}</h3>
+                                    
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            </div>
+                        </div>
+                            <i id="right" class="fa-solid fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>-->
+    
+
+    <section class="footer relative">
+        <div class="wrapper">
+            <footer class="pt-20 bg-dark">
+                <div class="bottom-footer bg-black pt-50 pb-50">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <p class="gradient-text">&copy; Made with 🖤 ARTISET Team</p>
+                                <a class="gradient-text scroll" href="mailto:admin@artiset.in">Contact us</a>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <ul class="block-legal">
+                                    <li><span><a class="gradient-text scroll" href="https://docs.google.com/document/d/e/2PACX-1vRpRp4C4Ebo1qeWhGDl3_s3Cd075c3RdvMMLazpGXxsAnt29P0X2DBpUv7VH-facDBNWWgVT0y46x43/pub">Rules & Code of Conduct</a></span></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <ul class="block-legal">
+                                    <li><span><a class="gradient-text scroll" href="#wrapper">Back To Top</a></span></li>
+                                    <li><span><a class="gradient-text scroll">Version 1.2.0</a></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const carousel = document.querySelector(".carousel");
+            const arrowBtns = document.querySelectorAll(".wrapper i");
+            const wrapper = document.querySelector(".wrapper");
+
+            const firstCard = carousel.querySelector(".card");
+            const firstCardWidth = firstCard.offsetWidth;
+
+            let isDragging = false,
+                startX,
+                startScrollLeft,
+                timeoutId;
+
+            const dragStart = (e) => {
+                isDragging = true;
+                carousel.classList.add("dragging");
+                startX = e.pageX;
+                startScrollLeft = carousel.scrollLeft;
+            };
+
+            const dragging = (e) => {
+                if (!isDragging) return;
+
+                const newScrollLeft = startScrollLeft - (e.pageX - startX);
+
+                if (newScrollLeft <= 0 || newScrollLeft >= carousel.scrollWidth - carousel.offsetWidth) {
+                    isDragging = false;
+                    return;
+                }
+
+                carousel.scrollLeft = newScrollLeft;
+            };
+
+            const dragStop = () => {
+                isDragging = false;
+                carousel.classList.remove("dragging");
+            };
+
+            const autoPlay = () => {
+                if (window.innerWidth < 800) return;
+
+                const totalCardWidth = carousel.scrollWidth;
+                const maxScrollLeft = totalCardWidth - carousel.offsetWidth;
+
+                if (carousel.scrollLeft >= maxScrollLeft) return;
+
+                timeoutId = setTimeout(() => carousel.scrollLeft += firstCardWidth, 2500);
+            };
+
+            carousel.addEventListener("mousedown", dragStart);
+            carousel.addEventListener("mousemove", dragging);
+            document.addEventListener("mouseup", dragStop);
+            wrapper.addEventListener("mouseenter", () => clearTimeout(timeoutId));
+            wrapper.addEventListener("mouseleave", autoPlay);
+
+            arrowBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    carousel.scrollLeft += btn.id === "left" ? -firstCardWidth : firstCardWidth;
+                });
+            });
+        });
+    </script>
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myTopnav");
+            var overlay = document.getElementById("overlay");
+            
+            if (x.className === "topnav") {
+                x.className += " responsive";
+                overlay.style.display = "block"; // Show the overlay
+            } else {
+                x.className = "topnav";
+                overlay.style.display = "none"; // Hide the overlay
+            }
+        }
+        
+        // Close the menu and overlay when clicking on the overlay
+        document.getElementById("overlay").addEventListener("click", function() {
+            var x = document.getElementById("myTopnav");
+            x.className = "topnav";
+            this.style.display = "none"; // Hide the overlay
+        });
+        </script>
+             
+</body>
+</html>
