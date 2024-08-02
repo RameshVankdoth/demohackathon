@@ -12,29 +12,28 @@ from datetime import datetime
 
 import pyodbc
 from azure.storage.blob import BlobClient, BlobServiceClient, ContainerClient
+from dotenv import load_dotenv
 from flask import (Flask, flash, jsonify, redirect, render_template, request,
                    session, url_for)
 from pymongo import MongoClient
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
+# Load environment variables from .env file
+load_dotenv()
+
 app = Flask(__name__, template_folder="templates")
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx'}
-app.secret_key = os.environ.get(
-    "FLASK_SECRET_KEY", "6a38d4e553910d47fcc908422f50591abfec0d131db734a5691aacb23e44be4"
-)  # Use environment variable for secret key
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
-AZURE_CONNECTION_STRING  = 'DefaultEndpointsProtocol=https;AccountName=artisetdata;AccountKey=pnBke+Pj1bvkaipv2aOgH6vsfFQfm3JS29szjhx2zQHqdWnKf/t7sptSJ0XVKRTYlmQgvwzkoNnX+ASta8kGdg==;EndpointSuffix=core.windows.net'  # Replace with your Azure Storage connection string
-RESUME_CONTAINER_NAME  = 'resumestorage' 
-CODE_CONTAINER_NAME  = 'codestorage' 
-
+AZURE_CONNECTION_STRING = os.environ.get("AZURE_CONNECTION_STRING")
+RESUME_CONTAINER_NAME = os.environ.get("RESUME_CONTAINER_NAME")
+CODE_CONTAINER_NAME = os.environ.get("CODE_CONTAINER_NAME")
 
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
 container_client_resume = blob_service_client.get_container_client(RESUME_CONTAINER_NAME)
 container_client_code = blob_service_client.get_container_client(CODE_CONTAINER_NAME)
-
-psno = 0
 
 def sanitize_filename(filename):
     return re.sub(r'[^\w\-.]', '', filename).strip()
@@ -42,7 +41,6 @@ def sanitize_filename(filename):
 def upload_to_blob(file_stream, filename):
     try:
         filename = sanitize_filename(filename)
-        blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
         blob_client = blob_service_client.get_blob_client(container=RESUME_CONTAINER_NAME, blob=filename)
         blob_client.upload_blob(file_stream, blob_type="BlockBlob", overwrite=True)
         return blob_client.url
@@ -53,7 +51,6 @@ def upload_to_blob(file_stream, filename):
 def upload_code(file_stream, filename):
     try:
         filename = sanitize_filename(filename)
-        blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
         blob_client = blob_service_client.get_blob_client(container=CODE_CONTAINER_NAME, blob=filename)
         blob_client.upload_blob(file_stream, blob_type="BlockBlob", overwrite=True)
         return blob_client.url
@@ -62,10 +59,10 @@ def upload_code(file_stream, filename):
         raise
 
 # Email configuration
-smtp_port = 587
-smtp_server = "smtp.gmail.com"
-email_from = "vijay.artiset1@gmail.com"
-pswd = "qtbhggrdbquptsls"
+smtp_port = int(os.environ.get("SMTP_PORT", 587))
+smtp_server = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
+email_from = os.environ.get("EMAIL_FROM")
+email_password = os.environ.get("EMAIL_PASSWORD")
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -75,23 +72,20 @@ def generate_otp(length=6):
     return ''.join(random.choice(string.digits) for _ in range(length))
 
 # MongoDB setup
-client = MongoClient(
-    "mongodb+srv://vankyrs:rukHnjdLGabqQGnA@problestatement.ztrbltk.mongodb.net/?retryWrites=true&w=majority&appName=ProbleStatement"
-)
+client = MongoClient(os.environ.get("MONGODB_URI"))
 
-#MonngoDB for Problem Statements
-db = client["Problems"]
-collection = db["Statements"]
+# MongoDB for Problem Statements
+db = client[os.environ.get("MONGODB_PROBLEMS_DB")]
+collection = db[os.environ.get("MONGODB_PROBLEMS_COLLECTION")]
 
-#MongoDB for contest Details 
-db2 = client["Contest"]
-collection2 = db2["Contests"]
+# MongoDB for Contest Details
+db2 = client[os.environ.get("MONGODB_CONTESTS_DB")]
+collection2 = db2[os.environ.get("MONGODB_CONTESTS_COLLECTION")]
 
 # SQL Server setup
-connection_string = (
-    'Driver={ODBC Driver 17 for SQL Server};Server=tcp:hackathondatabase.database.windows.net,1433;Database=hachathon;Uid=hackathon-admin;Pwd={Pune@2024};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
-)
+connection_string = os.environ.get("SQL_CONNECTION_STRING")
 
+# Example usage
 contests = collection2.find_one({})
 psno = contests['psno']
 problems = list(collection.find_one({}))
