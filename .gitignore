@@ -1,0 +1,33 @@
+# Ignore environment variables file
+.env
+
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+
+# Ignore log files
+*.log
+
+# Ignore uploaded files and directories
+uploads/
+
+# Ignore temporary files and directories
+*.tmp
+*.swp
+*.swo
+
+# Ignore IDE/editor specific files
+.vscode/
+.idea/
+
+# Ignore other sensitive files
+*.sqlite3
+
+# Ignore Azure Storage configuration files
+azure_config.json
+
+# Ignore Node.js modules if using Node.js
+node_modules/
+
+# Ignore Python virtual environment directory
+venv/
