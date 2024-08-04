@@ -336,7 +336,7 @@ def register():
                
                 conn.commit()
                 flash("Registration successful")
-                return redirect(url_for("thankyou"))
+                return redirect(url_for("loginpage"))
 
         except Exception as e:
             traceback.print_exc()  # Print the full traceback for debugging

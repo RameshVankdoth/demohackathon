@@ -182,6 +182,52 @@
             text-align: center;
         }
 
+        /* Styles for the table container */
+    .mt-5 {
+        margin-top: 3rem;
+    }
+
+    /* Styles for the table */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* Styles for table headings */
+    .table thead th {
+        background-color: #1f1f1f; /* Dark grey background for header */
+        color: #e0e0e0; /* Light text color */
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    /* Styles for table rows */
+    .table tbody tr {
+        border-bottom: 1px solid #333; /* Slightly lighter border for row separation */
+    }
+
+    /* Styles for table cells */
+    .table td {
+        background-color: #1c1c1c; /* Darker background for cells */
+        color: #e0e0e0; /* Light text color */
+        padding: 0.75rem;
+    }
+
+    /* Alternate row background color for better readability */
+    .table tbody tr:nth-child(even) td {
+        background-color: #2c2c2c; /* Slightly lighter dark background for alternating rows */
+    }
+
+    /* Styles for table borders */
+    .table-bordered {
+        border: 1px solid #333; /* Darker border for the table */
+    }
+
+    .table-bordered td,
+    .table-bordered th {
+        border: 1px solid #333; /* Darker border for cells */
+    }
+
 </style>
 
 
@@ -214,7 +260,8 @@
         <div class="row">
             <br><br>
             <div class="col-md-6 animate__animated animate__fadeIn">
-                <div class="mt-1">
+                <br>
+                <div class="mt-5">
                     <div id="problem-statements">
                         {% if problem %}
                         <div class="card mb-3 bg-dark text-white custom-card">
@@ -260,11 +307,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="container">
-                    <p>{{ problem.test_cases }}</p>
-                </div>
                 <div class="mt-5">
-                    <h3>Write Your Code</h3>
+                    <h3>Select Language and Theme:</h3>
                     <form id="code-form">
                         <div class="mb-3">
                             <label for="language" class="form-label">Select Language</label>
@@ -314,13 +358,13 @@
             </div>
         </div>
     </div>
-    <br><br>
 
     <div class="container animate__animated animate__backInLeft">
         <div class="mt-5">
             <form id="code-form">
+                <h2>Write Your Code</h2>
                 <div class="mb-3">
-                    <textarea id="code-editor" class="form-control" rows="15" disabled></textarea>
+                    <textarea id="code-editor" class="form-control" rows="20" disabled></textarea>
                 </div>
                 <button type="button" id="run-button" class="btn btn-primary">Run</button>
                 <button type="button" id="submit-button" class="btn btn-success">Submit</button>
@@ -340,6 +384,8 @@
     <div id="thank-you-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); z-index: 1000;">
         <p>Thank you!</p>
     </div>
+
+    <div id="warningMessage">Copying and pasting are disabled on this page.</div>
 
     <footer class="mt-5 bg-dark text-white py-3">
         <div class="container text-center">
@@ -398,7 +444,8 @@
     // Function to calculate the initial time difference in seconds
     function calculateInitialTime() {
     // Set the future time in IST (UTC+5:30)
-    const futureTimeString = '2024-08-04T11:00:00.000+05:30';
+    // const futureTimeString = '2024-08-05T14:00:00.000+05:30';
+    const futureTimeString = '{{contests["Start_Date_and-Time"]}}';
     const futureTime = new Date(futureTimeString);
     console.log('Future Time:', futureTime);
     
@@ -513,7 +560,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            outputElement.innerHTML = data.output ? `<pre><h1>${data.output}</h1></pre>` : `<pre style="color: red;">${data.error}</pre>`;
+            outputElement.innerHTML = data.output ? `<pre><h3>${data.output}</h3></pre>` : `<pre style="color: red;">${data.error}</pre>`;
         })
         .catch(error => {
             console.error('Error:', error);
@@ -588,8 +635,42 @@
     }
 
     function submitAndRedirect() {
-        alert("You have exceeded the allowed number of warnings. Your test will now be submitted.");
         // Redirect to another page or URL
+        countdown = 3; // Reset countdown on submit
+        fetch('/check_code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code: codeEditor.getValue(), language: languageSelector.value })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.results) {
+                let testCaseResults = '';
+                data.results.forEach((result, index) => {
+                    testCaseResults += `<div>Test Case ${index + 1}: ${result}</div>`;
+                });
+                testCasesElement.innerHTML = testCaseResults;
+            }
+            if (data.score) {
+            scoreElement.innerHTML = `Score: ${data.score}`;
+            }
+
+            // Check if a redirect URL is provided
+            if (data.redirect) {
+                // Redirect after 3 seconds
+                setTimeout(function() {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                }, 5000); // 3000 milliseconds = 3 seconds
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
+        });
         setTimeout(function() {
             alert("Thank you!");
             window.location.href = '/home'; 
@@ -655,7 +736,35 @@
 
 
     window.onload = enableFullScreen;
+
 </script>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var warningMessage = document.getElementById('warningMessage');
+
+            function showWarning() {
+                warningMessage.style.display = 'block';
+                setTimeout(function() {
+                    warningMessage.style.display = 'none';
+                }, 3000); // Hide the warning after 3 seconds
+            }
+
+            document.addEventListener('copy', function(event) {
+                event.preventDefault(); // Disable copy
+                showWarning(); // Show warning message
+            });
+
+            document.addEventListener('cut', function(event) {
+                event.preventDefault(); // Disable cut
+                showWarning(); // Show warning message
+            });
+
+            document.addEventListener('paste', function(event) {
+                event.preventDefault(); // Disable paste
+                showWarning(); // Show warning message
+            });
+        });
+    </script>
     
 </body>
 
