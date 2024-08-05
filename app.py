@@ -1,4 +1,5 @@
 import io
+import logging
 import os
 import random
 import re
@@ -19,6 +20,9 @@ from pymongo import MongoClient
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
+logging.basicConfig(level=logging.DEBUG)
+
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -34,6 +38,8 @@ CODE_CONTAINER_NAME = os.environ.get("CODE_CONTAINER_NAME")
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
 container_client_resume = blob_service_client.get_container_client(RESUME_CONTAINER_NAME)
 container_client_code = blob_service_client.get_container_client(CODE_CONTAINER_NAME)
+
+app.logger.setLevel(logging.DEBUG)
 
 def sanitize_filename(filename):
     return re.sub(r'[^\w\-.]', '', filename).strip()
