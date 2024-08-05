@@ -20,53 +20,65 @@ files = [
 ]
 
 
-# Helper to get comment syntax
+# Define comment syntax
 def get_comment(file):
-    if file.endswith((".py", ".sql")):
+    if file.endswith((".py", ".sql", ".yml")) or "dockerfile" in file.lower():
         return "#"
     elif file.endswith((".log", ".txt")):
         return "//"
     elif file.endswith(".md"):
         return "<!--", "-->"
-    elif file.endswith(".yml") or file.endswith("dockerfile"):
-        return "#"
     else:
         return "#"
 
 
-# Generate random date within past 8 months
-def random_date():
-    today = datetime.today()
-    start = today - timedelta(days=30 * 8)
-    rand_days = random.randint(0, (today - start).days)
-    return (start + timedelta(days=rand_days)).strftime("%Y-%m-%d")
+# Generate 100 random dates between Aug 1, 2024 and Feb 28, 2025
+def generate_random_dates(n):
+    start = datetime(2024, 8, 1)
+    end = datetime(2025, 2, 28)
+    return sorted(
+        [
+            start + timedelta(days=random.randint(0, (end - start).days))
+            for _ in range(n)
+        ]
+    )
 
 
-for file in files:
+# Get 100 commits across the files
+random_dates = generate_random_dates(100)
+
+for date in random_dates:
+    file = random.choice(files)
     if not os.path.exists(file):
         print(f"❌ File not found: {file}")
         continue
 
-    date = random_date()
     comment = get_comment(file)
+    formatted_date = date.strftime("%Y-%m-%d")
 
-    # Add comment
-    with open(file, "a", encoding="utf-8", errors="ignore") as f:
-        if isinstance(comment, tuple):
-            f.write(f"\n{comment[0]} file updated at {date} {comment[1]}\n")
-        else:
-            f.write(f"\n{comment} file updated at {date}\n")
+    try:
+        with open(file, "a", encoding="utf-8", errors="ignore") as f:
+            if isinstance(comment, tuple):
+                f.write(
+                    f"\n{comment[0]} file updated at {formatted_date} {comment[1]}\n"
+                )
+            else:
+                f.write(f"\n{comment} file updated at {formatted_date}\n")
 
-    subprocess.run(["git", "add", file])
+        subprocess.run(["git", "add", file])
 
-    # Git commit with fake timestamp
-    env = os.environ.copy()
-    env["GIT_AUTHOR_DATE"] = f"{date}T10:00:00"
-    env["GIT_COMMITTER_DATE"] = f"{date}T10:00:00"
+        # Set fake dates for Git
+        env = os.environ.copy()
+        iso = f"{formatted_date}T10:00:00"
+        env["GIT_AUTHOR_DATE"] = iso
+        env["GIT_COMMITTER_DATE"] = iso
 
-    msg = f"file updated at {date}"
-    subprocess.run(["git", "commit", "-m", msg], env=env)
+        msg = f"file updated at {formatted_date}"
+        subprocess.run(["git", "commit", "-m", msg], env=env)
 
-print("\n✅ All commits done. You can now push:\n   git push -u origin main")
+    except Exception as e:
+        print(f"⚠️ Error updating {file}: {e}")
 
-# file updated at 2024-12-24
+print("\n✅ 100 commits generated. Push using:\n   git push -u origin main")
+
+# file updated at 2024-08-05
