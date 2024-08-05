@@ -118,6 +118,32 @@ def home():
     return render_template("landingpage.html", contests=contests)
 
 
+
+@app.route("/test_file_operations")
+def test_file_operations():
+    try:
+        with open("testfile.txt", "w") as f:
+            f.write("Test data")
+
+        with open("testfile.txt", "r") as f:
+            content = f.read()
+
+        os.remove("testfile.txt")
+        return f"File content: {content}"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+@app.route("/test_subprocess")
+def test_subprocess():
+    try:
+        result = subprocess.run(["echo", "Hello World"], capture_output=True, text=True)
+        return f"stdout: {result.stdout}, stderr: {result.stderr}"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+
 # Route for login form
 @app.route("/login")
 def login():
