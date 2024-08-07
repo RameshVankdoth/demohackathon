@@ -253,7 +253,7 @@
         </div>
         <div id="confirmationBox">
             <p>You have exceeded the allowed number of warnings. Your test will now be submitted.</p>
-            <button onclick="submitAndRedirect()">OK</button>
+            <button id="final-button">OK</button>
         </div>
     </div>
     <div class="container animate__animated animate__backInUp">
@@ -603,37 +603,10 @@
             console.error('Error:', error);
             testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
         });
-    });      
-});
+    });
+    
 
-    </script>
-
-<script>
-    let warningCount = 0;
-    const maxWarnings = 3;
-    let initialTime = 600; // Example initial test time in seconds
-
-    function showWarning(message) {
-        const warningBox = document.getElementById('warningBox');
-        const warningMessage = document.getElementById('warningMessage');
-        warningMessage.innerText = message;
-        warningBox.style.display = 'block';
-    }
-
-    function hideWarningBox() {
-        document.getElementById('warningBox').style.display = 'none';
-        if (warningCount <= maxWarnings) {
-            enableFullScreen();
-        }
-    }
-
-    function showConfirmationBox() {
-        const confirmationBox = document.getElementById('confirmationBox');
-        confirmationBox.style.display = 'block';
-    }
-
-    function submitAndRedirect() {
-        // Redirect to another page or URL
+    document.getElementById('submit-button').addEventListener('click', function() {
         countdown = 3; // Reset countdown on submit
         fetch('/check_code', {
             method: 'POST',
@@ -669,11 +642,117 @@
             console.error('Error:', error);
             testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
         });
-        setTimeout(function() {
-            alert("Thank you!");
-            window.location.href = '/home'; 
-        }, 5000);
+    });
+
+    document.getElementById('final-button').addEventListener('click', function() {
+        countdown = 3; // Reset countdown on submit
+        fetch('/check_code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code: codeEditor.getValue(), language: languageSelector.value })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.results) {
+                let testCaseResults = '';
+                data.results.forEach((result, index) => {
+                    testCaseResults += `<div>Test Case ${index + 1}: ${result}</div>`;
+                });
+                testCasesElement.innerHTML = testCaseResults;
+            }
+            if (data.score) {
+            scoreElement.innerHTML = `Score: ${data.score}`;
+            }
+
+            // Check if a redirect URL is provided
+            if (data.redirect) {
+                // Redirect after 3 seconds
+                setTimeout(function() {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                }, 10000); // 1000 milliseconds = 1 seconds
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
+        });
+    });
+    
+});
+
+    </script>
+
+<script>
+    let warningCount = 0;
+    const maxWarnings = 3;
+    let initialTime = 600; // Example initial test time in seconds
+
+    function showWarning(message) {
+        const warningBox = document.getElementById('warningBox');
+        const warningMessage = document.getElementById('warningMessage');
+        warningMessage.innerText = message;
+        warningBox.style.display = 'block';
     }
+
+    function hideWarningBox() {
+        document.getElementById('warningBox').style.display = 'none';
+        if (warningCount <= maxWarnings) {
+            enableFullScreen();
+        }
+    }
+
+    function showConfirmationBox() {
+        const confirmationBox = document.getElementById('confirmationBox');
+        confirmationBox.style.display = 'block';
+    }
+
+    // function submitAndRedirect() {
+    //     // Redirect to another page or URL
+    //     countdown = 3; // Reset countdown on submit
+    //     fetch('/check_code', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ code: codeEditor.getValue(), language: languageSelector.value })
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.results) {
+    //             let testCaseResults = '';
+    //             data.results.forEach((result, index) => {
+    //                 testCaseResults += `<div>Test Case ${index + 1}: ${result}</div>`;
+    //             });
+    //             testCasesElement.innerHTML = testCaseResults;
+    //         }
+    //         if (data.score) {
+    //         scoreElement.innerHTML = `Score: ${data.score}`;
+    //         }
+
+    //         setTimeout(function() {
+    //                     window.location.href = '/login';
+                    
+    //             }, 5000); 
+
+    //         // Check if a redirect URL is provided
+    //         // if (data.redirect) {
+    //         //     // Redirect after 3 seconds
+    //         //     setTimeout(function() {
+    //         //         if (data.redirect) {
+    //         //             window.location.href = '/login';
+    //         //         }
+    //         //     }, 5000); // 3000 milliseconds = 3 seconds
+    //         // }
+    //     })
+    //     .catch(error => {
+    //         console.error('Error:', error);
+    //         testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
+    //     });
+    // }
 
     function freezeScreen(duration) {
         const freezeScreenElement = document.getElementById('freezeScreen');

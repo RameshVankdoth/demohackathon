@@ -48,7 +48,7 @@ def upload_to_blob(file_stream, filename):
     try:
         filename = sanitize_filename(filename)
         blob_client = blob_service_client.get_blob_client(container=RESUME_CONTAINER_NAME, blob=filename)
-        blob_client.upload_blob(file_stream, blob_type="BlockBlob", overwrite=True)
+        blob_client.upload_blob(file_stream, blob_type="BlockBlob", overwrite=False)
         return blob_client.url
     except Exception as e:
         print(f"Error uploading to Azure Blob: {str(e)}")
@@ -58,7 +58,7 @@ def upload_code(file_stream, filename):
     try:
         filename = sanitize_filename(filename)
         blob_client = blob_service_client.get_blob_client(container=CODE_CONTAINER_NAME, blob=filename)
-        blob_client.upload_blob(file_stream, blob_type="BlockBlob", overwrite=True)
+        blob_client.upload_blob(file_stream, blob_type="BlockBlob", overwrite=False)
         return blob_client.url
     except Exception as e:
         print(f"Error uploading to Azure Blob: {str(e)}")
@@ -807,7 +807,7 @@ def send_otp():
         cursor = conn.cursor()
 
         # Use parameterized query to avoid SQL injection
-        cursor.execute("SELECT * FROM Students WHERE EmailId = ?", (email_to,))
+        cursor.execute("SELECT * FROM Student WHERE EmailId = ?", (email_to,))
         user = cursor.fetchone()
         if user:
             # Store user data in session
@@ -819,21 +819,37 @@ def send_otp():
             session['pass2'] = user[7]
             session['pass3'] = user[8]
 
-            if all(session.get('pass1'), session.get('pass2'), session.get('pass3')):
+            if all([session.get('pass1'), session.get('pass2'), session.get('pass3')]):
                 flash("You have reached the password reset limit, please contact Artiset.")
                 return redirect(url_for('resetpass'))
 
             message = f"Subject: Your OTP Code\n\nDear User,\n\nYour OTP code is: {otp}\n\nPlease use this code to complete your verification.\n\nBest regards,\nArtiset Team"
 
             try:
+                # Create a default SSL context
                 context = ssl.create_default_context()
+                
+                logging.info("Connecting to the SMTP server.")
+                
+                # Connect to the SMTP server and start TLS
                 with smtplib.SMTP(smtp_server, smtp_port) as server:
                     server.starttls(context=context)
+                    
+                    logging.info("Logging in to the SMTP server.")
+                    
+                    # Login to the SMTP server
                     server.login(email_from, pswd)
+                    
+                    logging.info("Sending email.")
+                    
+                    # Send the email
                     server.sendmail(email_from, email_to, message)
+                
+                logging.info("OTP sent successfully to the email ID.")
                 flash("OTP sent successfully to your email ID.", "success")
+
             except smtplib.SMTPException as e:
-                print(f"SMTP error: {e}")
+                logging.error(f"SMTP error occurred: {e}")
                 flash("Failed to send OTP. Please check the email address and try again.", "error")
         else:
             flash("Email address not found. Please check and try again.", "warning")
@@ -898,7 +914,7 @@ def update_password():
         cursor = conn.cursor()
 
         # Update the password and shift the history
-        cursor.execute("UPDATE Students SET Password = ?, respass3 = respass2, respass2 = respass1, respass1 = ? WHERE EmailId = ?", (password_hash, password, email))
+        cursor.execute("UPDATE Student SET Password = ?, respass3 = respass2, respass2 = respass1, respass1 = ? WHERE EmailId = ?", (password_hash, password, email))
         conn.commit()
 
         flash('Password updated successfully.')
