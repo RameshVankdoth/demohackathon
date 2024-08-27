@@ -357,7 +357,8 @@ def code():
                 for case in test_cases:
                     print(f"Input: {case['input']}, Output: {case['output']}")
                 
-                    app.logger.info(f'The data type of test case {case['input']} is {type(case['input'])}')
+                    app.logger.info(f'The data type of test case {case["input"]} is {type(case["input"])}')
+
                     # Convert the input list to a JSON string
                     input_json = json.dumps(case['input'])
                     # Log the data type of the JSON string
