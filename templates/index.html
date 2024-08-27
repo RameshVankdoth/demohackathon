@@ -443,7 +443,7 @@
     function calculateInitialTime() {
     // Set the future time in IST (UTC+5:30)
     // const futureTimeString = '2024-08-05T14:00:00.000+05:30';
-    const futureTimeString = '{{contests["Start_Date_and-Time"]}}';
+    const futureTimeString = '{{contests["Start_Date_and_Time"]}}';
     const futureTime = new Date(futureTimeString);
     console.log('Future Time:', futureTime);
     
@@ -568,7 +568,7 @@
 
     // Event listener for Submit button
     document.getElementById('submit-button').addEventListener('click', function() {
-        countdown = 3; // Reset countdown on submit
+        countdown = 15; // Reset countdown on submit
         fetch('/check_code', {
             method: 'POST',
             headers: {
@@ -596,7 +596,7 @@
                     if (data.redirect) {
                         window.location.href = data.redirect;
                     }
-                }, 5000); // 3000 milliseconds = 3 seconds
+                }, 15000); // 3000 milliseconds = 3 seconds
             }
         })
         .catch(error => {
@@ -607,7 +607,7 @@
     
 
     document.getElementById('submit-button').addEventListener('click', function() {
-        countdown = 3; // Reset countdown on submit
+        countdown = 15; // Reset countdown on submit
         fetch('/check_code', {
             method: 'POST',
             headers: {
@@ -635,7 +635,7 @@
                     if (data.redirect) {
                         window.location.href = data.redirect;
                     }
-                }, 5000); // 3000 milliseconds = 3 seconds
+                }, 15000); // 3000 milliseconds = 3 seconds
             }
         })
         .catch(error => {
@@ -645,7 +645,7 @@
     });
 
     document.getElementById('final-button').addEventListener('click', function() {
-        countdown = 3; // Reset countdown on submit
+        countdown = 15; // Reset countdown on submit
         fetch('/check_code', {
             method: 'POST',
             headers: {
@@ -673,7 +673,7 @@
                     if (data.redirect) {
                         window.location.href = data.redirect;
                     }
-                }, 10000); // 1000 milliseconds = 1 seconds
+                }, 15000); // 1000 milliseconds = 1 seconds
             }
         })
         .catch(error => {
