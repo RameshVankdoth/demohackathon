@@ -256,37 +256,48 @@
             <button id="final-button">OK</button>
         </div>
     </div>
-    <div class="container animate__animated animate__backInUp">
+    <div class="container animate__animated animate__backInUp" style="overflow-y: scroll;">
         <div class="row">
             <br><br>
             <div class="col-md-6 animate__animated animate__fadeIn">
                 <br>
                 <div class="mt-5">
                     <div id="problem-statements">
-                        {% if problem %}
                         <div class="card mb-3 bg-dark text-white custom-card">
+                            {% if problem %}
                             <div class="card-body bg-secondary custom-card">
                                 <h5 class="card-title">Problem Statement:</h5>
-                                <p class="card-text">{{ problem.problem_statement }}</p>
+                                <p class="card-text">{{ problem_statement | safe }}</p>
+                                <!-- Debug Output -->
+                                <!-- <pre>{{ problem_statement }}</pre> -->
                             </div>
+                            {% endif %}
                         </div>
                         <div class="card mb-3 bg-dark text-white custom-card">
+                            {% if constraints %}
                             <div class="card-body bg-secondary custom-card">
                                 <h5 class="card-title">Constraints:</h5>
-                                <p class="card-text">{{ problem.description }}</p>
+                                <!-- <p class="card-text">{{ constraints | safe }}</p> -->
+                                <!-- Debug Output -->
+                                <pre>{{ constraints }}</pre>
                             </div>
+                            {% endif %}
                         </div>
                         <div class="card mb-3 bg-dark text-white custom-card">
+                            {% if explanation %}
                             <div class="card-body bg-secondary custom-card">
-                                <h5 class="card-title">Explanation:</h5>
-                                <p class="card-text">{{ problem.explanation }}</p>
+                                <h5 class="card-title">Additional Info:</h5>
+                                <!-- <p class="card-text">{{ explanation }}</p> -->
+                                <!-- Debug Output -->
+                                <pre>{{ explanation }}</pre>
                             </div>
+                            {% endif %}
                         </div>
-                        {% endif %}
                     </div>
                 </div>
+                
             </div>
-            <div class="col-md-6 animate__animated animate__delay-4s">
+            <div class="col-md-6 animate__animated animate__delay-4s" style="margin-top: 5px;">
                 <div class="mt-5">
                     {% if problem %}
                     <h3>Sample Input and Output</h3>
@@ -335,14 +346,12 @@
     <div class="overlay" id="start-overlay">
         <div class="col-md-4">
             <div class="container bg-dark text-left border-black">
-                <h1 class="text-center bg-danger">Warning</h1>
-                    <p class="text-center">The test will start as soon as you click on start button.</p>
+                <h1 class="text-center bg-danger">Quick Instructions</h1>
                 <ol type="1">
-                    <li>Please do not close, change, minimize the tab it will throw a warning.</li>
-                    <li>You will get enough time to solve the problem just be patient and solve.</li>
-                    <li>After 3 warning test will be autosubmitted and you will be redirected to homepage.</li>
-                    <li>After clicking submit button you will be able to see all test cases.</li>
-                    <li>Clicking on submit will final submit the code.</li>
+                    <li>The test will start as soon as you click on start button.</li>
+                    <li>The problem has a designated time</li>
+                    <li>Please take a note of the Timer displayed</li>
+                    <li>Once code is submitted, result will be displayed.</li>
                 </ol>
                 <div class="row text-center">
                     <div class="col-md-4">
@@ -558,7 +567,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            outputElement.innerHTML = data.output ? `<pre><h3>${data.output}</h3></pre>` : `<pre style="color: red;">${data.error}</pre>`;
+            outputElement.innerHTML = data.output ? `<pre style="font-size:20px"><h3>${data.output}</h3></pre>` : `<pre style="color: red;">${data.error}</pre>`;
         })
         .catch(error => {
             console.error('Error:', error);
@@ -566,83 +575,44 @@
         });
     });
 
-    // Event listener for Submit button
+    // Event listner for Submit button
     document.getElementById('submit-button').addEventListener('click', function() {
-        countdown = 15; // Reset countdown on submit
-        fetch('/check_code', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ code: codeEditor.getValue(), language: languageSelector.value })
+    countdown = 15; 
+    fetch('/check_code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            code: codeEditor.getValue(), 
+            language: languageSelector.value 
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.results) {
-                let testCaseResults = '';
-                data.results.forEach((result, index) => {
-                    testCaseResults += `<div>Test Case ${index + 1}: ${result}</div>`;
-                });
-                testCasesElement.innerHTML = testCaseResults;
-            }
-            if (data.score) {
-            scoreElement.innerHTML = `Score: ${data.score}`;
-            }
-
-            // Check if a redirect URL is provided
-            if (data.redirect) {
-                // Redirect after 3 seconds
-                setTimeout(function() {
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
-                    }
-                }, 15000); // 3000 milliseconds = 3 seconds
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
-        });
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.output) {
+            testCasesElement.innerHTML = `<pre style="font-size:20px"><h3>${data.output}</h3></pre>`;
+        }
+        // if (data.score) {
+        //     scoreElement.innerHTML = `<pre style="font-size:20px"><h3>${data.score}</h3></pre>`;
+        // }
+        if (data.redirect) {
+            setTimeout(function() {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                }
+            }, 15000);
+        }if(data.error){
+            scoreElement.innerHTML = `Error in code: ${data.error}`;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        testCasesElement.innerHTML = `<pre style="color: red;">Error: ${error.message}</pre>`;
     });
+});
+
     
-
-    document.getElementById('submit-button').addEventListener('click', function() {
-        countdown = 15; // Reset countdown on submit
-        fetch('/check_code', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ code: codeEditor.getValue(), language: languageSelector.value })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.results) {
-                let testCaseResults = '';
-                data.results.forEach((result, index) => {
-                    testCaseResults += `<div>Test Case ${index + 1}: ${result}</div>`;
-                });
-                testCasesElement.innerHTML = testCaseResults;
-            }
-            if (data.score) {
-            scoreElement.innerHTML = `Score: ${data.score}`;
-            }
-
-            // Check if a redirect URL is provided
-            if (data.redirect) {
-                // Redirect after 3 seconds
-                setTimeout(function() {
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
-                    }
-                }, 15000); // 3000 milliseconds = 3 seconds
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            testCasesElement.innerHTML = '<pre style="color: red;">Error checking code. Please try again.</pre>';
-        });
-    });
 
     document.getElementById('final-button').addEventListener('click', function() {
         countdown = 15; // Reset countdown on submit
@@ -810,38 +780,48 @@
     }
 }
 
-
-
     window.onload = enableFullScreen;
 
 </script>
 <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var warningMessage = document.getElementById('warningMessage');
-
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('code-editor');
+        const warningMessage = document.getElementById('warningMessage');
+    
+        if (textarea) {
+            // Disable paste event and show warning
+            textarea.addEventListener('paste', function(event) {
+                console.log('Paste event detected'); // Debugging paste event
+                event.preventDefault();
+                showWarning();
+            });
+    
+            // Other event handlers can be managed here
             function showWarning() {
-                warningMessage.style.display = 'block';
-                setTimeout(function() {
-                    warningMessage.style.display = 'none';
-                }, 3000); // Hide the warning after 3 seconds
+                if (warningMessage) {
+                    warningMessage.style.display = 'block';
+                    setTimeout(function() {
+                        warningMessage.style.display = 'none';
+                    }, 3000); // Hide the warning after 3 seconds
+                }
             }
-
+    
+            // Global event handlers
             document.addEventListener('copy', function(event) {
                 event.preventDefault(); // Disable copy
                 showWarning(); // Show warning message
             });
-
+    
             document.addEventListener('cut', function(event) {
                 event.preventDefault(); // Disable cut
                 showWarning(); // Show warning message
             });
-
-            document.addEventListener('paste', function(event) {
-                event.preventDefault(); // Disable paste
-                showWarning(); // Show warning message
-            });
-        });
+        } else {
+            console.error('Textarea not found');
+        }
+    });
     </script>
+    
     
 </body>
 
