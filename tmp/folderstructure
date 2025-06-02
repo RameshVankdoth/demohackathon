@@ -1,0 +1,92 @@
+Campus/
+|___UserProfileManagement/
+|           |_____backend/
+|                    |_____APIs/
+|                    |_____routes/
+|                    |_____server.js
+|                    |_____package.json
+|           |_____frontend/
+|                    |_____angularapp/
+|___AdminModule/
+|           |_____backend/
+|                    |_____APIs/
+|                    |_____routes/
+|                    |_____server.js
+|           |_____frontend/
+|                    |_____angularapp/
+|___Hackathon/
+|           |_____app.py
+|           |_____requirements.txt
+|           |_____templates/
+|                    |_____html files
+|___Resume/
+|           |_____app.py
+|           |_____requirements.txt
+|           |_____templates/
+|                    |_____html files
+
+
+
+
+Campus/
+├── UserProfileManagement/
+│   ├── backend/
+│   │   ├── APIs/
+│   │   ├── routes/
+│   │   ├── server.js
+│   │   ├── package.json
+│   │   ├── Dockerfile                     # Dockerfile for UPM backend
+│   │   └── kubernetes/                   # Kubernetes manifests for UPM backend
+│   │       ├── deployment.yaml
+│   │       └── service.yaml
+│   ├── frontend/
+│   │   ├── angularapp/
+│   │   ├── Dockerfile                     # Dockerfile for UPM frontend
+│   │   └── kubernetes/                   # Kubernetes manifests for UPM frontend
+│   │       ├── deployment.yaml
+│   │       └── service.yaml
+│   └── docker-compose.yml                 # Optional: Docker Compose file for UPM module
+│
+├── AdminModule/
+│   ├── backend/
+│   │   ├── APIs/
+│   │   ├── routes/
+│   │   ├── server.js
+│   │   ├── package.json
+│   │   ├── Dockerfile                     # Dockerfile for AdminModule backend
+│   │   └── kubernetes/                   # Kubernetes manifests for AdminModule backend
+│   │       ├── deployment.yaml
+│   │       └── service.yaml
+│   ├── frontend/
+│   │   ├── angularapp/
+│   │   ├── Dockerfile                     # Dockerfile for AdminModule frontend
+│   │   └── kubernetes/                   # Kubernetes manifests for AdminModule frontend
+│   │       ├── deployment.yaml
+│   │       └── service.yaml
+│   └── docker-compose.yml                 # Optional: Docker Compose file for AdminModule
+│
+├── Hackathon/
+│   ├── app.py
+│   ├── requirements.txt
+│   ├── templates/
+│   │   └── html files
+│   ├── Dockerfile                          # Dockerfile for Hackathon service
+│   └── kubernetes/                        # Kubernetes manifests for Hackathon
+│       ├── deployment.yaml
+│       └── service.yaml
+│
+├── Resume/
+│   ├── app.py
+│   ├── requirements.txt
+│   ├── templates/
+│   │   └── html files
+│   ├── Dockerfile                          # Dockerfile for Resume service
+│   └── kubernetes/                        # Kubernetes manifests for Resume
+│       ├── deployment.yaml
+│       └── service.yaml
+│
+├── kubernetes/                            # Global Kubernetes resources (optional)
+│   ├── namespace.yaml                      # Define Kubernetes namespace for all modules
+│   ├── ingress.yaml                        # Optional: Ingress configuration for routing
+│   ├── volume-persistent.yaml              # Persistent volume definitions (if needed)
+└── docker-compose.yml                     # Optional: Top-level Docker Compose file for local testing

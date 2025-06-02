@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  user-profile-backend:
+    build: ./UserProfileManagement/backend
+    ports:
+      - "3000:3000"
+  
+  user-profile-frontend:
+    build: ./UserProfileManagement/frontend
+    ports:
+      - "4200:4200"
+  
+  admin-module-backend:
+    build: ./AdminModule/backend
+    ports:
+      - "3001:3001"
+  
+  admin-module-frontend:
+    build: ./AdminModule/frontend
+    ports:
+      - "4201:4201"
+  
+  hackathon:
+    build: ./Hackathon
+    ports:
+      - "5000:5000"
+  
+  resume:
+    build: ./Resume
+    ports:
+      - "5001:5001"

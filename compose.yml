@@ -1,0 +1,55 @@
+# version: '3.8'
+
+# services:
+#   user-profile-backend:
+#     build: ./UserProfileManagement/backend
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#         - .env 
+  
+#   user-profile-frontend:
+#     build: ./UserProfileManagement/frontend
+#     ports:
+#       - "4200:4200"
+#     env_file:
+#       - .env 
+  
+#   admin-module-backend:
+#     build: ./AdminModule/backend
+#     ports:
+#       - "3001:3001"
+#     env_file:
+#         - .env 
+  
+#   admin-module-frontend:
+#     build: ./AdminModule/frontend
+#     ports:
+#       - "4201:4201"
+#     env_file:
+#         - .env 
+  
+#   hackathon:
+#     build: ./Hackathon
+#     ports:
+#       - "5000:5000"
+  
+#   resume:
+#     build: ./Resume
+#     ports:
+#       - "5001:5001"
+#     env_file:
+#         - .env 
+
+# version: '3.8'
+
+services:
+  app:
+    image: "campus-image:latest"
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env  
+
+
+
