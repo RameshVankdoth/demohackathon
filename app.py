@@ -646,6 +646,8 @@ def get_python_function(python_code):
             error_message = "No Python function found."
             logging.error(error_message)
             return error_message
+    except Exception as e:
+        print("Error is", e)
 
 #=============================== Get the Python function name ========================================
 def get_python_function(python_code):
@@ -931,7 +933,7 @@ def run_code(language, content, file_name):
     except KeyError as key_err:
         logging.error(f"Key error in response: {key_err}")
         return {"error": f"Key error: {key_err}"}
-            return {'error':'no response recieved from the code'}
+            
 
     except requests.exceptions.HTTPError as http_err:
         logging.error(f"HTTP error occurred: {http_err} - Response: {response.text}")
@@ -1193,6 +1195,8 @@ def store_score(user_id, score, attempt, code):
                            (user_id, score, attempt, code))
             conn.commit() 
             logging.info(f"Score of {score} successfully stored for user ID {user_id}.")
+    except Exception as e:
+        print("Error is", e) 
 #====================================== APIs execution for Code Scoring ===============================================
 def run_python_code(user_code):
     code = f"""
@@ -1379,6 +1383,8 @@ def execute_code():
                 return jsonify({"error":exc_output})
             output_lines = result['stdout'].strip().split('\n')
             return jsonify({"output": "\n".join(output_lines)})
+    except Exception as e:
+        print("Error is", e)
 #============================================= Code with APIs=======================================
 @app.route("/execute_code", methods=["POST"])
 def execute_code():
